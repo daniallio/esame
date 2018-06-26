@@ -1,10 +1,12 @@
-package business;
+package model;
 
+import controller.DocumentoStore;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import javax.inject.Inject;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -20,44 +22,41 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 public class DocumentoRes {
 
     private static final String LOCATION = "/home/tss/Scrivania/";
+    @Inject
+    DocumentoStore docStore;
 
-    /*
-    @POST
-    @Path("/upload")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response upload(@FormDataParam("file") InputStream is,
-            @FormDataParam("file") ContentDisposition contentDispositionHeader) {
-
-        try {
-            Files.copy(is,
-                    Paths.get(LOCATION + contentDispositionHeader.getFileName()),
-                    StandardCopyOption.REPLACE_EXISTING);
-
-            return Response.ok().build();
-        } catch (IOException ex) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-
-    }
-    */
-
-    
     @POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(FormDataMultiPart form) {
         try {
+
             FormDataBodyPart filePart = form.getField("file");
-            ContentDisposition contentDispositionHeader =  filePart.getContentDisposition();
+            ContentDisposition contentDispositionHeader = filePart.getContentDisposition();
 
             InputStream fileInputStream = filePart.getValueAs(InputStream.class);
 
             Files.copy(fileInputStream,
                     Paths.get(LOCATION + contentDispositionHeader.getFileName()),
                     StandardCopyOption.REPLACE_EXISTING);
-            
+
+            //recupero i valori dei parametri inviati via form
+            //ID
+            FormDataBodyPart id = form.getField("id");
+            String contentID = id.getValue();
+            //TItolo
+            FormDataBodyPart titolo = form.getField("titolo");
+            String contentTitolo = titolo.getValue();
+
+            String path = (LOCATION + contentDispositionHeader.getFileName());
+            path = path.trim();
+
+            System.out.println(" - " + contentID + " - " + path + " - " + contentTitolo);
+
+            docStore.inserisciDoc(contentID, path, contentTitolo);
             String output = "File saved to server..";
             return Response.ok(output).build();
+
         } catch (IOException ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

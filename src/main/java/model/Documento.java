@@ -49,6 +49,14 @@ public class Documento implements Serializable{
     public Documento() {
     }
 
+    public Documento(String titolo, String path, Utente utente) {
+        this.titolo = titolo;
+        this.path = path;
+        this.utente = utente;
+    }
+    
+    
+    
     public Documento(Long idDocumento) {
         this.idDocumento = idDocumento;
     }
