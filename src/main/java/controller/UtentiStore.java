@@ -22,8 +22,11 @@ public class UtentiStore {
     EntityManager em;
 
 //restituisce un lista di tutti glu user registrati
-    public List<Utente> getAll() {
-        return em.createNamedQuery(Utente.FIND_ALL, Utente.class).getResultList();
+    public List<Utente> getAll(String id) {
+
+        Long idLong;
+        idLong = Long.parseLong(id);
+        return em.createNamedQuery(Utente.FIND_ALL, Utente.class).setParameter("id", idLong).getResultList();
     }
 
 //crea un utente in db solo se non è presente in db    
@@ -90,6 +93,8 @@ public class UtentiStore {
         }
 
     }
+
+    
     
 
 }

@@ -32,6 +32,7 @@ public class Documento implements Serializable{
     public static final String FIND_ALL = "Documento.findAll";
     public static final String FIND_ALL_By_ID = "Documento.findAllById";
     
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
