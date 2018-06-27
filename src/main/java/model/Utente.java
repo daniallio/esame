@@ -26,8 +26,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
 @NamedQuery(name = Utente.FIND_ALL, query = "SELECT u FROM Utente u"),
 @NamedQuery(name = Utente.FIND_BY_MAIL_PSW, query = "SELECT u FROM Utente u where u.email = :email and u.password = :psw"),
-@NamedQuery(name = Utente.FIND_BY_ID, query = "SELECT u FROM Utente u where u.id = :id")
-        
+@NamedQuery(name = Utente.FIND_BY_ID, query = "SELECT u FROM Utente u where u.id = :id"),
+@NamedQuery(name = Utente.FIND_BY_TOKEN, query = "SELECT u FROM Utente u where u.token = :token")        
 })
         
         
@@ -36,6 +36,7 @@ public class Utente implements Serializable{
     public static final String FIND_ALL = "utente.findAll";
     public static final String FIND_BY_MAIL_PSW = "utente.findLogin";
     public static final String FIND_BY_ID = "Utente.findId";
+    public static final String FIND_BY_TOKEN = "Utente.findToken";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

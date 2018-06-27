@@ -33,6 +33,7 @@ public class UtentiRes {
         return store.getAll();
     }
 
+//registrati    
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response create(@FormParam("rEmail") String email, @FormParam("rPsw") String password) {
@@ -49,6 +50,7 @@ public class UtentiRes {
         }
     }
 
+//login    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/login")
@@ -70,4 +72,7 @@ public class UtentiRes {
         }
 
     }
+    
+    
+    
 }

@@ -2,10 +2,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-         <title>Cloud</title>
+        <title>Cloud</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link href="css/home.css" rel="stylesheet" type="text/css"/>
     </head>
 
     <body>
@@ -19,48 +20,114 @@
                 <nav>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#login" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#registrati" role="tab" aria-controls="profile" aria-selected="false">Condivisione</a>
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#condivisione" role="tab" aria-controls="profile" aria-selected="false">Condivisione</a>
                         </li>
                     </ul>
                 </nav>
             </div>
 
-            <!-- Jumbotron -->
-            <div class="jumbotron">
-                <h1>Upload File</h1>
-                <p class="lead">Scegli il file da caricare</p>
-                <form enctype="multipart/form-data" id="fUpload">
-                    <p> <input type="file" name="file" id="file"/> 
-                        <input type="text" name="titolo" id="titolo"/> 
-                        <button class="btn btn-success">Invia</button>
-                </form>
+
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"> 
+                    <!-- Jumbotron -->
+                    <div class="jumbotron">
+                        <h1>Upload File</h1>
+                        <p class="lead">Scegli il file da caricare</p>
+                        <br>
+                        <form enctype="multipart/form-data" id="fUpload">
+                            <p> <input type="file" name="file" id="file"/> 
+                                <input type="text" name="titolo" id="titolo"/> 
+                                <button class="btn btn-success">Invia</button>
+                        </form>
+                    </div>
+
+                    <!-- Example row of columns -->
+                    <div class="row">
+                        <div  class="col-lg-10">
+                            <a class="list-group-item list-group-item-action active">
+                                <h4> Documenti Caricati </h4> 
+                            </a>
+                            <div class="list-group" id="all">
+
+                                <!-- <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a> -->
+
+                            </div>
+                        </div>
+                        <div  class="col-lg-1">
+                            <a class="list-group-item list-group-item-action active">
+                                <h4>A</h4> 
+                            </a>
+                            <div class="list-group" id="allDw">
+
+                                <!-- <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a> -->
+
+                            </div>
+                        </div> 
+                        <div  class="col-lg-1">
+                            <a class="list-group-item list-group-item-action active">
+                                <h4>A</h4> 
+                            </a>
+                            <div class="list-group" id="allEl">
+
+                                <!-- <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a> -->
+
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+
+
+
+
+                <div class="tab-pane fade" id="condivisione" role="tabpanel" aria-labelledby="home-tab"> 
+                    <div class="jumbotron">
+                        <h1>Condividi File</h1>
+                        <p class="lead">Scegli il file Condividere</p>
+                        <br>
+                        <div class="row">
+                            <div  class="col-lg-5">  
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroupSelect01">File</label>
+                                    </div>
+                                    <select class="custom-select" id="selFile">
+                                        
+                                    </select>
+                                </div>
+                            </div>  
+                            
+                              <div  class="col-lg-5">  
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroupSelect01">Utente</label>
+                                    </div>
+                                    <select class="custom-select" id="selUtente">
+                                        <option selected>Choose...</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                            </div>  
+                           
+                            <div  class="col-lg-2">
+                                
+                                <button class="btn btn-success" id="btnCondividi"> Condividi </button>
+                            </div>
+                            
+                            
+                        </div>    
+                    </div>
+                </div>
             </div>
 
-            <!-- Example row of columns -->
-            <div class="row">
-                <div class="col-lg-4">
-                    <h2>Safari bug warning!</h2>
-                    <p class="text-danger">As of v9.1.2, Safari exhibits a bug in which resizing your browser horizontally causes rendering errors in the justified nav that are cleared upon refreshing.</p>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
-                </div>
-                <div class="col-lg-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
-                </div>
-                <div class="col-lg-4">
-                    <h2>Heading</h2>
-                    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
-                    <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
-                </div>
-            </div>
 
             <!-- Site footer -->
             <footer class="footer">
+                <br>
                 <p>&copy; 2018 Allione Daniele, CIAC</p>
             </footer>
 

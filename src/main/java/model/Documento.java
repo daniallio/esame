@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -19,10 +21,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "documenti")
+@NamedQueries({
+@NamedQuery(name = Documento.FIND_ALL,query = "select d from Documento d"),
+@NamedQuery(name = Documento.FIND_ALL_By_ID,query = "select d from Documento d where d.utente.id = :id")
+
+})
 @XmlRootElement 
 public class Documento implements Serializable{
 
-    
+    public static final String FIND_ALL = "Documento.findAll";
+    public static final String FIND_ALL_By_ID = "Documento.findAllById";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,6 +61,12 @@ public class Documento implements Serializable{
         this.titolo = titolo;
         this.path = path;
         this.utente = utente;
+    }
+
+    public Documento(Long idDocumento, String titolo, String path) {
+        this.idDocumento = idDocumento;
+        this.titolo = titolo;
+        this.path = path;
     }
     
     

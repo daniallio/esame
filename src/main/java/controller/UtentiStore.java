@@ -76,5 +76,20 @@ public class UtentiStore {
         
        
     }
+    
+    
+    public Optional<Utente> validate(String token) {
+        System.out.println(token + "token in QUERY");
+        try {
+            Utente user = em.createNamedQuery(Utente.FIND_BY_TOKEN, Utente.class)
+                    .setParameter("token", token)
+                    .getSingleResult();
+            return Optional.of(user);
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
+
+    }
+    
 
 }
