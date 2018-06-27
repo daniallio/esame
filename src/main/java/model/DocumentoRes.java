@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import javafx.scene.media.Media;
 import javax.inject.Inject;
 
 import javax.ws.rs.Consumes;
@@ -39,6 +40,15 @@ public class DocumentoRes {
     public List<Documento> getAll(){
         return docStore.findAll();
     }
+    
+    
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Documento> getDocUser(@PathParam("id") String id){
+     return docStore.findAll(id);
+    
+     }
     
     
     @POST

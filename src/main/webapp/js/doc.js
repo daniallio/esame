@@ -6,7 +6,7 @@ const condividi = document.getElementById("condividi")
 
 
 caricaDocumenti()
-
+caricaUtDoc()
 //funzione che carica la lista dei documenti per l'utente
 function caricaDocumenti() {
     let container = document.getElementById("all");
@@ -107,8 +107,11 @@ fUpload.addEventListener("submit", event => {
 
     function caricaUtDoc(){
 
-        var listaFile = document.getElementById("selFile")
-        fetch("http://localhost:8080/esame_cloud/rest/utenti",
+        var listaUser = document.getElementById("selUtente")
+        var listaDoc = document.getElementById("selFile")
+        
+        
+        fetch("http://localhost:8080/esame_cloud/rest/utenti/" + localStorage.getItem('id'),
         {
             method : "GET"
         }).then(response =>{
@@ -120,11 +123,34 @@ fUpload.addEventListener("submit", event => {
         }).then(jsonData =>{
             jsonData.forEach(json => {
                 var option = document.createElement("option")
-                
-            
+                option.value = json.id
+                option.innerHTML = json.email
+                listaUser.appendChild(option)
             });
             
         })
+        
+        fetch("http://localhost:8080/esame_cloud/rest/documenti/" + localStorage.getItem('id'),
+        {
+            method : "GET",headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+        }).then(response =>{
+             if (response.status == 200) {
+                return response.json()
+            }else{
+                console.log(response)
+            }
+        }).then(jsonData =>{
+            jsonData.forEach(json => {
+                var option = document.createElement("option")
+                option.value = json.id
+                option.innerHTML = json.path
+                listaDoc.appendChild(option)
+            });
+            
+        })
+        
     
 }
 
