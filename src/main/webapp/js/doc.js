@@ -9,6 +9,7 @@ const listaDoc = document.getElementById("selFile")
 
 caricaDocumenti()
 caricaUtDoc()
+caricaDocCond()
 //funzione che carica la lista dei documenti per l'utente
 function caricaDocumenti() {
     let container = document.getElementById("all");
@@ -32,7 +33,7 @@ function caricaDocumenti() {
             }).then(resp => {
         return resp.json()
     }).then(jsonData => {
-        console.log(jsonData[0])
+
         for (var i = 0; i < jsonData.length; i++) {
             //creo i link per il download e gli elementi della lista
             let el = document.createElement(`p`)
@@ -55,7 +56,7 @@ function caricaDocumenti() {
             container.appendChild(el)
             container2.appendChild(btnDown)
             container3.appendChild(btnEl)
-
+            caricaUtDoc()
         }
 
 
@@ -90,15 +91,15 @@ fUpload.addEventListener("submit", event => {
 
 
 //condivisione documenti
-function condividi(){
+function condividi() {
     console.log("entro")
     var data = new URLSearchParams()
     data.append("selUtente", listaUser.value)
     data.append("selFile", listaDoc.value)
-    
+
     console.log("selFile", listaDoc.value)
-     console.log("selUtente", listaUser.value)
-     
+    console.log("selUtente", listaUser.value)
+
     event.preventDefault()
 
     fetch("http://localhost:8080/esame_cloud/rest/documenti/condividi",
@@ -108,9 +109,9 @@ function condividi(){
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
                 body: data
-            }).then(resp =>{
-                console.log(resp)
-            })
+            }).then(resp => {
+        console.log(resp)
+    })
 }
 
 
@@ -132,11 +133,49 @@ function elimina(id) {
     })
 }
 
+
+
+
+function caricaDocCond() {
+    let container = document.getElementById("allCondivisi");
+    let container2 = document.getElementById("allElCond");
+
+    fetch("http://localhost:8080/esame_cloud/rest/documenti/docCondivisi/" + localStorage.getItem('id'),
+            {method: "GET",
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+        if (response.status == 200) {
+            return response.json()
+        } else {
+            alert("problema caricamento lista")
+            console.log(response.status)
+        }
+    }).then(jsonData => {
+        for (var i = 0; i < jsonData.length; i++) {
+            for(var j = 0; j < jsonData.length; j++){
+            let el = document.createElement(`p`)
+            let btnEl = document.createElement("a")
+            btnEl.classList.add("badge-danger")
+            btnEl.innerHTML = "X"
+            btnEl.setAttribute("href", "#");
+            btnEl.setAttribute("style", "height:49px")
+            btnEl.setAttribute(`onclick`, `elimina(${jsonData[i].idDocumento})`)
+            el.classList.add("list-group-item");
+            el.setAttribute("id", "pDocCond");
+            console.log(jsonData[i].condivisioni[j].email)
+            el.innerHTML = "<b> Condiviso con </b> - " + jsonData[i].condivisioni[j].email + " - <b> File - </b>" + jsonData[i].path
+            container.appendChild(el)
+            container2.appendChild(btnEl)
+          }  
+        }
+    })
+
+
+}
+
 function caricaUtDoc() {
-
-
-
-
     fetch("http://localhost:8080/esame_cloud/rest/utenti/" + localStorage.getItem('id'),
             {
                 method: "GET"
