@@ -93,7 +93,7 @@
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="inputGroupSelect01">Utente</label>
                                     </div>
-                                    <select class="custom-select" id="selUtente">
+                                    <select class="custom-select" id="selUtente" name="selUtente">
                                         
                                     </select>
                                 </div>
@@ -104,7 +104,7 @@
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="inputGroupSelect01">File</label>
                                     </div>
-                                    <select class="custom-select" id="selFile">
+                                    <select class="custom-select" id="selFile" name="selFile">
                                       
                                     </select>
                                 </div>
@@ -112,12 +112,37 @@
                            
                             <div  class="col-lg-2">
                                 
-                                <button class="btn btn-success" id="btnCondividi"> Condividi </button>
+                                <button class="btn btn-success" id="btnCondividi" onclick="condividi()"> Condividi </button>
                             </div>
-                            
-                            
                         </div>    
                     </div>
+                    <div class="row">
+                        <div  class="col-lg-10">
+                            <a class="list-group-item list-group-item-action active">
+                                <h4> Documenti Condivisi </h4> 
+                            </a>
+                            <div class="list-group" id="allCondivisi">
+
+                                
+
+                            </div>
+                        </div>
+
+                        
+                        <div  class="col-lg-2">
+                            <a class="list-group-item list-group-item-action active">
+                                <h4>A</h4> 
+                            </a>
+                            <div class="list-group" id="allElCond">
+
+                                
+
+                            </div>
+                        </div> 
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
 

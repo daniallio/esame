@@ -94,6 +94,10 @@ public class UtentiStore {
 
     }
 
+    public Utente findById(String idUtente) {
+        return em.find(Utente.class, Long.parseLong(idUtente));
+    }
+
     
     
 

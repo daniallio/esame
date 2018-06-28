@@ -2,7 +2,9 @@
 const fUpload = document.getElementById("fUpload")
 const file = document.getElementById("file")
 const titolo = document.getElementById("titolo")
-const condividi = document.getElementById("condividi")
+const listaUser = document.getElementById("selUtente")
+const listaDoc = document.getElementById("selFile")
+//const condividi = document.getElementById("btnCondividi")
 
 
 caricaDocumenti()
@@ -87,71 +89,95 @@ fUpload.addEventListener("submit", event => {
 })
 
 
-    function elimina(id) {
+//condivisione documenti
+function condividi(){
+    console.log("entro")
+    var data = new URLSearchParams()
+    data.append("selUtente", listaUser.value)
+    data.append("selFile", listaDoc.value)
+    
+    console.log("selFile", listaDoc.value)
+     console.log("selUtente", listaUser.value)
+     
+    event.preventDefault()
 
-        console.log(id)
-        event.preventDefault();
-
-        fetch("http://localhost:8080/esame_cloud/rest/documenti/elimina/" + id,
-                {method: "DELETE",
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    }
-                }).then(response => {
-            if (response.status == 200) {
-                console.log(response.status)
-                caricaDocumenti()
-            }
-        })
+    fetch("http://localhost:8080/esame_cloud/rest/documenti/condividi",
+            {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: data
+            }).then(resp =>{
+                console.log(resp)
+            })
 }
 
-    function caricaUtDoc(){
 
-        var listaUser = document.getElementById("selUtente")
-        var listaDoc = document.getElementById("selFile")
-        
-        
-        fetch("http://localhost:8080/esame_cloud/rest/utenti/" + localStorage.getItem('id'),
-        {
-            method : "GET"
-        }).then(response =>{
-             if (response.status == 200) {
-                return response.json()
-            }else{
-                console.log(response)
-            }
-        }).then(jsonData =>{
-            jsonData.forEach(json => {
-                var option = document.createElement("option")
-                option.value = json.id
-                option.innerHTML = json.email
-                listaUser.appendChild(option)
-            });
-            
-        })
-        
-        fetch("http://localhost:8080/esame_cloud/rest/documenti/" + localStorage.getItem('id'),
-        {
-            method : "GET",headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    }
-        }).then(response =>{
-             if (response.status == 200) {
-                return response.json()
-            }else{
-                console.log(response)
-            }
-        }).then(jsonData =>{
-            jsonData.forEach(json => {
-                var option = document.createElement("option")
-                option.value = json.id
-                option.innerHTML = json.path
-                listaDoc.appendChild(option)
-            });
-            
-        })
-        
-    
+function elimina(id) {
+
+    console.log(id)
+    event.preventDefault();
+
+    fetch("http://localhost:8080/esame_cloud/rest/documenti/elimina/" + id,
+            {method: "DELETE",
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+        if (response.status == 200) {
+            console.log(response.status)
+            caricaDocumenti()
+        }
+    })
+}
+
+function caricaUtDoc() {
+
+
+
+
+    fetch("http://localhost:8080/esame_cloud/rest/utenti/" + localStorage.getItem('id'),
+            {
+                method: "GET"
+            }).then(response => {
+        if (response.status == 200) {
+            return response.json()
+        } else {
+            console.log(response)
+        }
+    }).then(jsonData => {
+        jsonData.forEach(json => {
+            var option = document.createElement("option")
+            option.value = json.id
+            option.innerHTML = json.email
+            listaUser.appendChild(option)
+        });
+
+    })
+
+    fetch("http://localhost:8080/esame_cloud/rest/documenti/" + localStorage.getItem('id'),
+            {
+                method: "GET", headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+        if (response.status == 200) {
+            return response.json()
+        } else {
+            console.log(response)
+        }
+    }).then(jsonData => {
+        jsonData.forEach(json => {
+            var option = document.createElement("option")
+            option.value = json.idDocumento
+            option.innerHTML = json.path
+            listaDoc.appendChild(option)
+        });
+
+    })
+
+
 }
 
 

@@ -14,3 +14,11 @@
 .badge-warning{
     height: 50x;
 }
+
+
+
+.col-lg-2{
+    padding-right: 0px;
+    padding-left: 0px;
+    text-align: center;
+}

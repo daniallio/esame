@@ -2,6 +2,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -23,15 +24,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "documenti")
 @NamedQueries({
 @NamedQuery(name = Documento.FIND_ALL,query = "select d from Documento d"),
-@NamedQuery(name = Documento.FIND_ALL_By_ID,query = "select d from Documento d where d.utente.id = :id")
-
+@NamedQuery(name = Documento.FIND_ALL_By_ID,query = "select d from Documento d where d.utente.id = :id"),
+@NamedQuery(name = Documento.FIND_CONDIVISI,query = "select d from Documento d where d.utente.id = :id and d.condivisioni IS NOT EMPTY")
 })
 @XmlRootElement 
 public class Documento implements Serializable{
 
     public static final String FIND_ALL = "Documento.findAll";
     public static final String FIND_ALL_By_ID = "Documento.findAllById";
-    
+    public static final String FIND_CONDIVISI = "Documento.findCondivisi";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +52,7 @@ public class Documento implements Serializable{
     private Utente utente;
      
     @ManyToMany
-    private List<Utente> condivisioni;
+    private List<Utente> condivisioni = new ArrayList<>();
     
    
 
