@@ -5,6 +5,7 @@
         <title>Cloud</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link href="css/home.css" rel="stylesheet" type="text/css"/>
     </head>
@@ -17,6 +18,9 @@
                  Multiple lines will require custom code not provided by Bootstrap. -->
             <div class="masthead">
                 <h3 class="text-muted">Cloud</h3>
+                
+                <div class="float-right"><a href="#" class="badge badge-light" onclick="logout()">Logout</a></div>
+                <div class="float-right" id="utenteLoggato" style="font-size: 15px"> </div>
                 <nav>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -25,8 +29,11 @@
                         <li class="nav-item">
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#condivisione" role="tab" aria-controls="profile" aria-selected="false">Condivisione</a>
                         </li>
+                        
                     </ul>
+                    
                 </nav>
+
             </div>
 
 
@@ -47,7 +54,7 @@
                     <!-- Example row of columns -->
                     <div class="row">
                         <div  class="col-lg-10">
-                            <a class="list-group-item list-group-item-action active">
+                            <a class="list-group-item list-group-item-action active" id="barraCond" style="height: 62px">
                                 <h4> Documenti Caricati </h4> 
                             </a>
                             <div class="list-group" id="all">
@@ -57,19 +64,21 @@
                             </div>
                         </div>
                         <div  class="col-lg-1">
-                            <a class="list-group-item list-group-item-action active">
-                                <h4>A</h4> 
-                            </a>
+                            
+                                <p class="list-group-item list-group-item-action active" style="height: 62px; text-align: center" id="barraCond2">
+                                    <i class="fas fa-download" style="color: black; text-align: center;font-size: 20px"></i>
+                                </p>
+                            
                             <div class="list-group" id="allDw">
 
-                                <!-- <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a> -->
 
                             </div>
+                                
                         </div> 
                         <div  class="col-lg-1">
-                            <a class="list-group-item list-group-item-action active">
-                                <h4>A</h4> 
-                            </a>
+                             <p class="list-group-item list-group-item-action active" style="height: 62px" id="barraCond3">
+                                    <i class="fas fa-trash" style="color: black;font-size: 20px"></i>
+                             </p>
                             <div class="list-group" id="allEl">
 
                                 <!-- <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a> -->
@@ -94,24 +103,24 @@
                                         <label class="input-group-text" for="inputGroupSelect01">Utente</label>
                                     </div>
                                     <select class="custom-select" id="selUtente" name="selUtente">
-                                        
+
                                     </select>
                                 </div>
                             </div>  
-                            
-                              <div  class="col-lg-5">  
+
+                            <div  class="col-lg-5">  
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="inputGroupSelect01">File</label>
                                     </div>
                                     <select class="custom-select" id="selFile" name="selFile">
-                                      
+
                                     </select>
                                 </div>
                             </div>  
-                           
+
                             <div  class="col-lg-2">
-                                
+
                                 <button class="btn btn-success" id="btnCondividi" onclick="condividi()"> Condividi </button>
                             </div>
                         </div>    
@@ -123,26 +132,26 @@
                             </a>
                             <div class="list-group" id="allCondivisi">
 
-                                
+
 
                             </div>
                         </div>
 
-                        
+
                         <div  class="col-lg-2">
                             <a class="list-group-item list-group-item-action active">
                                 <h4>A</h4> 
                             </a>
                             <div class="list-group" id="allElCond">
 
-                                
+
 
                             </div>
                         </div> 
                     </div>
-                    
-                    
-                    
+
+
+
                 </div>
             </div>
 

@@ -22,3 +22,9 @@
     padding-left: 0px;
     text-align: center;
 }
+
+
+#barraCond,#barraCond2,#barraCond3{
+    background-color: #e9ecef;
+    border-color: #e9ecef;
+}

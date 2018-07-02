@@ -98,6 +98,12 @@ public class UtentiStore {
         return em.find(Utente.class, Long.parseLong(idUtente));
     }
 
+    public Utente findByEmail(String email) {
+         return em.createNamedQuery(Utente.FIND_BY_MAIL, Utente.class).
+                 setParameter("mail", email).
+                 getSingleResult();
+    }
+
     
     
 

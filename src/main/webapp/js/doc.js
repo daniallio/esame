@@ -4,12 +4,22 @@ const file = document.getElementById("file")
 const titolo = document.getElementById("titolo")
 const listaUser = document.getElementById("selUtente")
 const listaDoc = document.getElementById("selFile")
+document.getElementById("utenteLoggato").innerHTML = localStorage.getItem("email")
 //const condividi = document.getElementById("btnCondividi")
 
 
 caricaDocumenti()
 caricaUtDoc()
 caricaDocCond()
+
+//funzione di logout
+function logout() {
+    localStorage.clear()
+    document.location.href = "index.html"
+}
+
+
+
 //funzione che carica la lista dei documenti per l'utente
 function caricaDocumenti() {
     let container = document.getElementById("all");
@@ -39,24 +49,33 @@ function caricaDocumenti() {
             let el = document.createElement(`p`)
             let btnEl = document.createElement("a")
             let btnDown = document.createElement("a")
-            btnEl.classList.add("badge-danger")
-            btnEl.innerHTML = "X"
-            btnDown.classList.add("badge-warning")
+            let liDown = document.createElement("li")
+            let liEl = document.createElement("li")
+            btnEl.classList.add("badge-light")
+            liDown.classList.add("fas")
+            liDown.classList.add("fa-download")
+            liEl.classList.add("fas")
+             liEl.classList.add("fa-trash")
+             liDown.setAttribute("style","color:grey")
+             liEl.setAttribute("style","color:grey")
+            btnDown.classList.add("badge-light")
             btnDown.setAttribute("href", "http://localhost:8080/esame_cloud/rest/documenti/download/" + jsonData[i].path);
             btnEl.setAttribute("href", "#");
             btnDown.setAttribute("style", "height:49px")
             btnEl.setAttribute("style", "height:49px")
             btnEl.setAttribute(`onclick`, `elimina(${jsonData[i].idDocumento})`)
-            btnDown.style.fontSize = "30px";
-            btnDown.innerHTML = "&#8595;"
+            btnDown.style.fontSize = "20px";
+            
             el.classList.add("list-group-item");
             el.setAttribute("id", "pDoc");
             el.innerHTML = "<b> Descrizione File </b> - " + jsonData[i].titolo + " - <b> File - </b>" + jsonData[i].path
 
+            btnDown.appendChild(liDown)
+            btnEl.appendChild(liEl)
             container.appendChild(el)
             container2.appendChild(btnDown)
             container3.appendChild(btnEl)
-            caricaUtDoc()
+
         }
 
 
@@ -97,8 +116,7 @@ function condividi() {
     data.append("selUtente", listaUser.value)
     data.append("selFile", listaDoc.value)
 
-    console.log("selFile", listaDoc.value)
-    console.log("selUtente", listaUser.value)
+
 
     event.preventDefault()
 
@@ -111,6 +129,7 @@ function condividi() {
                 body: data
             }).then(resp => {
         console.log(resp)
+        //caricaDocCond()
     })
 }
 
@@ -148,27 +167,29 @@ function caricaDocCond() {
             }).then(response => {
         if (response.status == 200) {
             return response.json()
+
         } else {
             alert("problema caricamento lista")
             console.log(response.status)
         }
     }).then(jsonData => {
+        console.log(jsonData)
         for (var i = 0; i < jsonData.length; i++) {
-            for(var j = 0; j < jsonData.length; j++){
-            let el = document.createElement(`p`)
-            let btnEl = document.createElement("a")
-            btnEl.classList.add("badge-danger")
-            btnEl.innerHTML = "X"
-            btnEl.setAttribute("href", "#");
-            btnEl.setAttribute("style", "height:49px")
-            btnEl.setAttribute(`onclick`, `elimina(${jsonData[i].idDocumento})`)
-            el.classList.add("list-group-item");
-            el.setAttribute("id", "pDocCond");
-            console.log(jsonData[i].condivisioni[j].email)
-            el.innerHTML = "<b> Condiviso con </b> - " + jsonData[i].condivisioni[j].email + " - <b> File - </b>" + jsonData[i].path
-            container.appendChild(el)
-            container2.appendChild(btnEl)
-          }  
+            for (var j = 0; j < jsonData[i].condivisioni.length; j++) {
+                let el = document.createElement(`p`)
+                let btnEl = document.createElement("a")
+                btnEl.classList.add("badge-danger")
+                btnEl.innerHTML = "X"
+                btnEl.setAttribute("href", "#");
+                btnEl.setAttribute("style", "height:49px")
+                btnEl.setAttribute(`onclick`, `elimina(${jsonData[i].idDocumento})`)
+                el.classList.add("list-group-item");
+                el.setAttribute("id", "pDocCond");
+                console.log(jsonData[i].condivisioni[j].email)
+                el.innerHTML = "<b> Condiviso con </b> - " + jsonData[i].condivisioni[j].email + " - <b> File - </b>" + jsonData[i].path
+                container.appendChild(el)
+                container2.appendChild(btnEl)
+            }
         }
     })
 

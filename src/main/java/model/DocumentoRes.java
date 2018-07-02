@@ -8,8 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import javafx.scene.media.Media;
+
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonObject;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,18 +21,34 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 @Path("/documenti")
-@AuthRequired //interviene filtro
+
 public class DocumentoRes {
 
-    private static final String LOCATION = "/home/tss/Scrivania/";
+    private static final String LOCATION = "/home/tss/Scrivania/cloud/";
+    //salvero l'id utente per effettuare le operazioni di salva ed elimina file
+    private static String idUtente = "";
+
+    
+    public static String getIdUtente() {
+        return idUtente;
+    }
+
+    public static void setIdUtente(String idUtente) {
+        DocumentoRes.idUtente = idUtente;
+    }
+    
+    
+    
+    
     @Inject
     DocumentoStore docStore;
 
@@ -45,6 +63,8 @@ public class DocumentoRes {
     }
     
     
+//elenco di documenti per utente    
+    @AuthRequired //interviene filtro
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -53,7 +73,8 @@ public class DocumentoRes {
     
      }
     
-//elenco dei docomenti di un user    
+//elenco dei docomenti di un user   
+    @AuthRequired
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,20 +85,19 @@ public class DocumentoRes {
     
     
     //carico un nuovo documento per l'utente loggato
+    @AuthRequired
     @POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(FormDataMultiPart form) {
         try {
-
+//recupero il file inviato inviato via form
             FormDataBodyPart filePart = form.getField("file");
+//recupero il nome del file
             ContentDisposition contentDispositionHeader = filePart.getContentDisposition();
-
+//inserisco il file all'interno dell'input stream
             InputStream fileInputStream = filePart.getValueAs(InputStream.class);
 
-            Files.copy(fileInputStream,
-                    Paths.get(LOCATION + contentDispositionHeader.getFileName()),
-                    StandardCopyOption.REPLACE_EXISTING);
 
             //recupero i valori dei parametri inviati via form
             //ID
@@ -90,6 +110,13 @@ public class DocumentoRes {
             String path = (contentDispositionHeader.getFileName());
             path = path.trim();
 
+            idUtente = contentID;
+           //copio il il file all'interno della cartella 
+            Files.copy(fileInputStream,
+                    Paths.get(LOCATION + idUtente + "/"  + contentDispositionHeader.getFileName()),
+                    StandardCopyOption.REPLACE_EXISTING); 
+            
+            
             System.out.println(" - " + contentID + " - " + path + " - " + contentTitolo);
 
             docStore.inserisciDoc(contentID, path, contentTitolo);
@@ -102,6 +129,7 @@ public class DocumentoRes {
 
     }
 
+    
     @GET
     @Path("/download/{fname}")
     public Response download(@PathParam("fname") String fname){
@@ -117,13 +145,15 @@ public class DocumentoRes {
         
     }
     
+    @AuthRequired
     @DELETE
     @Path("/elimina/{id}")
     public Response delete(@PathParam("id") String id){
        try{
+          //conterrà il nome del file 
           String path; 
           path = docStore.deleteDoc(id);  
-          Files.delete(Paths.get(LOCATION + path));
+          Files.delete(Paths.get(LOCATION + idUtente + "/" + path));
           String output = "File " + path + " eliminato correttamente.";
           return Response.ok(output).build();
        }catch(IOException ex) {
@@ -134,7 +164,8 @@ public class DocumentoRes {
     }
         
     
-// condividi file   
+// condividi file  
+    @AuthRequired
     @POST
     @Path("/condividi")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -152,6 +183,34 @@ public class DocumentoRes {
     }
     
     
+    
+//      @GET
+//    @Path("/docCondivisi/{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getDocCondivisi(@PathParam("id") String id){
+//        
+//        JsonObject json = null;
+//        JsonObject jsonArray = null;
+//        List<Documento> elencoUtenti = docStore.findCondivisi1(id);
+//        
+//        for(int i = 0; i < elencoUtenti.size(); i++){
+//            for(int j = 0; j < elencoUtenti.get(i).getCondivisioni().size(); j++){
+//            json = Json.createObjectBuilder().
+//                    add("condivisioni", Json.createArrayBuilder().
+//                    add(Json.createObjectBuilder().        
+//                    add("email", elencoUtenti.get(i).getCondivisioni().get(j).getEmail())
+//                    .add("path", elencoUtenti.get(i).getPath())))
+//                    .build();
+//            
+//            
+//            }
+//        }
+//        
+//        return Response.ok(json).build();
+//        
+//    }
+    
+    @AuthRequired
     @GET
     @Path("/docCondivisi/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -159,4 +218,15 @@ public class DocumentoRes {
         
         return docStore.findCondivisi1(id);
     }
+    
+    //@AuthRequired
+    @GET
+    @Path("/docCondivisiConMe/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Documento> getDocFileCondivisiConME(@PathParam("id") String id){
+        
+        return docStore.findCondivisiConMe(id);
+    }
+    
+    
 }

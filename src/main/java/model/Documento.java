@@ -34,6 +34,7 @@ public class Documento implements Serializable{
     public static final String FIND_ALL_By_ID = "Documento.findAllById";
     public static final String FIND_CONDIVISI = "Documento.findCondivisi";
     
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -68,6 +69,10 @@ public class Documento implements Serializable{
     public Documento(Long idDocumento, String titolo, String path) {
         this.idDocumento = idDocumento;
         this.titolo = titolo;
+        this.path = path;
+    }
+
+    public Documento(String path) {
         this.path = path;
     }
     
@@ -115,6 +120,7 @@ public class Documento implements Serializable{
 
     public void setCondivisioni(List<Utente> condivisioni) {
         this.condivisioni = condivisioni;
+        
     }
 
  

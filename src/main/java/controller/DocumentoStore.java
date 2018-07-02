@@ -36,7 +36,7 @@ public class DocumentoStore {
         return em.createNamedQuery(Documento.FIND_ALL_By_ID, Documento.class).setParameter("id", idUtente).getResultList();
     }
 
-//cancella documento     
+//cancella documento per id
     public String deleteDoc(String id) {
         Documento doc;
         Long idDocumento = Long.parseLong(id);
@@ -66,6 +66,17 @@ public class DocumentoStore {
     public List<Documento> findCondivisi1(String id) {
        Long idUtente = Long.parseLong(id);
         return em.createNamedQuery(Documento.FIND_CONDIVISI, Documento.class).setParameter("id", idUtente).getResultList();
+    }
+    
+       public List<Documento> findCondivisiConMe(String id) {
+       Long idUtente = Long.parseLong(id);
+       String query = "SELECT path from utenti inner join documenti_utenti on ID = condivisioni_ID inner join documenti on id_documento = Documento_id_documento where ID = ?";
+             
+      
+       return em.createNativeQuery(query, Documento.class)
+               .setParameter(1, idUtente)
+               .getResultList();
+       
     }
 
 }
