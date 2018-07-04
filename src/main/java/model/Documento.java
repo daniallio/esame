@@ -25,7 +25,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
 @NamedQuery(name = Documento.FIND_ALL,query = "select d from Documento d"),
 @NamedQuery(name = Documento.FIND_ALL_By_ID,query = "select d from Documento d where d.utente.id = :id"),
-@NamedQuery(name = Documento.FIND_CONDIVISI,query = "select d from Documento d where d.utente.id = :id and d.condivisioni IS NOT EMPTY")
+@NamedQuery(name = Documento.FIND_CONDIVISI,query = "select d from Documento d where d.utente.id = :id and d.condivisioni IS NOT EMPTY"),
+@NamedQuery(name = Documento.FIND_CONDIVISI_CON_ME,query = "select d from Documento d JOIN d.condivisioni c where c.id = :idutente")
 })
 @XmlRootElement 
 public class Documento implements Serializable{
@@ -33,7 +34,7 @@ public class Documento implements Serializable{
     public static final String FIND_ALL = "Documento.findAll";
     public static final String FIND_ALL_By_ID = "Documento.findAllById";
     public static final String FIND_CONDIVISI = "Documento.findCondivisi";
-    
+    public static final String FIND_CONDIVISI_CON_ME = "Documento.findCondivisiME";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

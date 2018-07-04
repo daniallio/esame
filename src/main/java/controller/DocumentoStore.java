@@ -70,12 +70,15 @@ public class DocumentoStore {
     
        public List<Documento> findCondivisiConMe(String id) {
        Long idUtente = Long.parseLong(id);
-       String query = "SELECT path from utenti inner join documenti_utenti on ID = condivisioni_ID inner join documenti on id_documento = Documento_id_documento where ID = ?";
-             
-      
-       return em.createNativeQuery(query, Documento.class)
-               .setParameter(1, idUtente)
-               .getResultList();
+//       String query = "SELECT path from utenti inner join documenti_utenti on ID = condivisioni_ID inner join documenti on id_documento = Documento_id_documento where ID = ?";
+//             
+//      
+//       return em.createNativeQuery(query, Documento.class)
+//               .setParameter(1, idUtente)
+//               .getResultList();
+
+        return em.createNamedQuery(Documento.FIND_CONDIVISI_CON_ME, Documento.class)
+                .setParameter("idutente", idUtente).getResultList();
        
     }
 

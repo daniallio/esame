@@ -34,18 +34,21 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 public class DocumentoRes {
 
     private static final String LOCATION = "/home/tss/Scrivania/cloud/";
-    //salvero l'id utente per effettuare le operazioni di salva ed elimina file
-    private static String idUtente = "";
+    //salvero la mail utente per effettuare le operazioni di salva ed elimina file
+    private static String emailUtente;
 
-    
-    public static String getIdUtente() {
-        return idUtente;
+    public static String getEmailUtente() {
+        return emailUtente;
     }
 
-    public static void setIdUtente(String idUtente) {
-        DocumentoRes.idUtente = idUtente;
+    public static void setEmailUtente(String emailUtente) {
+        DocumentoRes.emailUtente = emailUtente;
     }
     
+ 
+
+    
+
     
     
     
@@ -106,14 +109,17 @@ public class DocumentoRes {
             //TItolo
             FormDataBodyPart titolo = form.getField("titolo");
             String contentTitolo = titolo.getValue();
-
+            //email che mi serve per indicare la cartella dove salvare il file
+            FormDataBodyPart email = form.getField("email");
+            String contentEmail = email.getValue();
+            
             String path = (contentDispositionHeader.getFileName());
             path = path.trim();
 
-            idUtente = contentID;
+            DocumentoRes.emailUtente = contentEmail;
            //copio il il file all'interno della cartella 
             Files.copy(fileInputStream,
-                    Paths.get(LOCATION + idUtente + "/"  + contentDispositionHeader.getFileName()),
+                    Paths.get(LOCATION + emailUtente + "/"  + contentDispositionHeader.getFileName()),
                     StandardCopyOption.REPLACE_EXISTING); 
             
             
@@ -135,7 +141,7 @@ public class DocumentoRes {
     public Response download(@PathParam("fname") String fname){
         try{
             Response.ResponseBuilder rb = 
-                    Response.ok(Files.readAllBytes(Paths.get(LOCATION + fname)));
+                    Response.ok(Files.readAllBytes(Paths.get(LOCATION + emailUtente + "/" + fname)));
             rb.type(MediaType.APPLICATION_OCTET_STREAM);
             rb.header("Content-Disposition", "attachment; filename=\"" + fname + "\"");
             return rb.build();
@@ -153,7 +159,7 @@ public class DocumentoRes {
           //conterrà il nome del file 
           String path; 
           path = docStore.deleteDoc(id);  
-          Files.delete(Paths.get(LOCATION + idUtente + "/" + path));
+          Files.delete(Paths.get(LOCATION + emailUtente + "/" + path));
           String output = "File " + path + " eliminato correttamente.";
           return Response.ok(output).build();
        }catch(IOException ex) {
@@ -177,6 +183,24 @@ public class DocumentoRes {
         Documento doc = docStore.findById(idDoc);
         //aggiungo l'utente alla lista delle condivisioni
         doc.getCondivisioni().add(u);
+        //aggiorno il documento dato che ho aggiunto un elemento alla lista delle condivisioni
+        docStore.save(doc);
+        return Response.ok().build();
+    }
+    
+    
+    //elimina un file condiviso 
+    @AuthRequired
+    @DELETE
+    @Path("/elCondividi/{idUtente}/{idDoc}")
+    public Response elCondividi(@PathParam("idUtente") String idUtente, @PathParam("idDoc") String idDoc){
+       
+        //cerco l'utente per cui voglio condividere
+        Utente u = uStore.findById(idUtente);
+        //cerco il documento da condividere
+        Documento doc = docStore.findById(idDoc);
+        //aggiungo l'utente alla lista delle condivisioni
+        doc.getCondivisioni().remove(u);
         //aggiorno il documento dato che ho aggiunto un elemento alla lista delle condivisioni
         docStore.save(doc);
         return Response.ok().build();
@@ -219,7 +243,7 @@ public class DocumentoRes {
         return docStore.findCondivisi1(id);
     }
     
-    //@AuthRequired
+   // @AuthRequired
     @GET
     @Path("/docCondivisiConMe/{id}")
     @Produces(MediaType.APPLICATION_JSON)

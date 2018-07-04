@@ -58,7 +58,7 @@ public class UtentiRes {
             try {
                 //cerco l'utente appena creato per prendere l'id in maniera da creare una cartella univoca
                 Utente utenteCartella = store.findByEmail(email);
-                Files.createDirectories(Paths.get(PATH_CLOUD + utenteCartella.getId()));
+                Files.createDirectories(Paths.get(PATH_CLOUD + utenteCartella.getEmail()));
             } catch (IOException ex) {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
@@ -85,7 +85,7 @@ public class UtentiRes {
                     .add("id", logged.getId())
                     .build();
             //memorizzo l'id nella variabile di documentoRes
-            DocumentoRes.setIdUtente(String.valueOf(logged.getId()));
+            DocumentoRes.setEmailUtente(String.valueOf(logged.getEmail()));
             return Response.ok(json).build();
             
         } catch (EJBException ex) {

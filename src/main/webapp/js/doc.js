@@ -10,8 +10,8 @@ document.getElementById("utenteLoggato").innerHTML = localStorage.getItem("email
 
 caricaDocumenti()
 caricaUtDoc()
-caricaDocCond()
-
+//caricaDocCond()
+documentiCondivisiConME()
 //funzione di logout
 function logout() {
     localStorage.clear()
@@ -55,9 +55,9 @@ function caricaDocumenti() {
             liDown.classList.add("fas")
             liDown.classList.add("fa-download")
             liEl.classList.add("fas")
-             liEl.classList.add("fa-trash")
-             liDown.setAttribute("style","color:grey")
-             liEl.setAttribute("style","color:grey")
+            liEl.classList.add("fa-trash")
+            liDown.setAttribute("style", "color:grey")
+            liEl.setAttribute("style", "color:grey")
             btnDown.classList.add("badge-light")
             btnDown.setAttribute("href", "http://localhost:8080/esame_cloud/rest/documenti/download/" + jsonData[i].path);
             btnEl.setAttribute("href", "#");
@@ -65,7 +65,7 @@ function caricaDocumenti() {
             btnEl.setAttribute("style", "height:49px")
             btnEl.setAttribute(`onclick`, `elimina(${jsonData[i].idDocumento})`)
             btnDown.style.fontSize = "20px";
-            
+
             el.classList.add("list-group-item");
             el.setAttribute("id", "pDoc");
             el.innerHTML = "<b> Descrizione File </b> - " + jsonData[i].titolo + " - <b> File - </b>" + jsonData[i].path
@@ -91,6 +91,7 @@ fUpload.addEventListener("submit", event => {
     data.append("file", file.files[0])
     data.append("titolo", titolo.value)
     data.append("id", localStorage.getItem("id"))
+    data.append("email", localStorage.getItem("email"))
 
     event.preventDefault()
 
@@ -129,11 +130,11 @@ function condividi() {
                 body: data
             }).then(resp => {
         console.log(resp)
-        //caricaDocCond()
+
     })
 }
 
-
+//elimina un documento caricato
 function elimina(id) {
 
     console.log(id)
@@ -154,48 +155,55 @@ function elimina(id) {
 
 
 
+////carica l'elenco dei documento che ho condiviso
+//function caricaDocCond() {
+//    let container = document.getElementById("allCondivisi");
+//    let container2 = document.getElementById("allElCond");
+//
+//    fetch("http://localhost:8080/esame_cloud/rest/documenti/docCondivisi/" + localStorage.getItem('id'),
+//            {method: "GET",
+//                headers: {
+//                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+//                }
+//            }).then(response => {
+//        if (response.status == 200) {
+//            return response.json()
+//
+//        } else {
+//            alert("problema caricamento lista")
+//            console.log(response.status)
+//        }
+//    }).then(jsonData => {
+//        console.log(jsonData)
+//        for (var i = 0; i < jsonData.length; i++) {
+//            for (var j = 0; j < jsonData[i].condivisioni.length; j++) {
+//                let el = document.createElement(`p`)
+//                let btnEl = document.createElement("a")
+//                let liEl = document.createElement("li")
+//                liEl.classList.add("fas")
+//                liEl.classList.add("fa-trash")
+//             
+//                liEl.setAttribute("style","color:grey")
+//                btnEl.classList.add("badge-light")
+//                
+//                btnEl.setAttribute("href", "#");
+//                btnEl.setAttribute("style", "height:49px")
+//                //btnEl.setAttribute(`onclick`, `elimina(${jsonData[i].idDocumento})`)
+//                el.classList.add("list-group-item");
+//                el.setAttribute("id", "pDocCond");
+//                console.log(jsonData[i].condivisioni[j].email)
+//                el.innerHTML = "<b> Condiviso con </b> - " + jsonData[i].condivisioni[j].email + " - <b> File - </b>" + jsonData[i].path
+//                btnEl.appendChild(liEl)
+//                container.appendChild(el)
+//                container2.appendChild(btnEl)
+//            }
+//        }
+//    })
+//
+//
+//}
 
-function caricaDocCond() {
-    let container = document.getElementById("allCondivisi");
-    let container2 = document.getElementById("allElCond");
-
-    fetch("http://localhost:8080/esame_cloud/rest/documenti/docCondivisi/" + localStorage.getItem('id'),
-            {method: "GET",
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            }).then(response => {
-        if (response.status == 200) {
-            return response.json()
-
-        } else {
-            alert("problema caricamento lista")
-            console.log(response.status)
-        }
-    }).then(jsonData => {
-        console.log(jsonData)
-        for (var i = 0; i < jsonData.length; i++) {
-            for (var j = 0; j < jsonData[i].condivisioni.length; j++) {
-                let el = document.createElement(`p`)
-                let btnEl = document.createElement("a")
-                btnEl.classList.add("badge-danger")
-                btnEl.innerHTML = "X"
-                btnEl.setAttribute("href", "#");
-                btnEl.setAttribute("style", "height:49px")
-                btnEl.setAttribute(`onclick`, `elimina(${jsonData[i].idDocumento})`)
-                el.classList.add("list-group-item");
-                el.setAttribute("id", "pDocCond");
-                console.log(jsonData[i].condivisioni[j].email)
-                el.innerHTML = "<b> Condiviso con </b> - " + jsonData[i].condivisioni[j].email + " - <b> File - </b>" + jsonData[i].path
-                container.appendChild(el)
-                container2.appendChild(btnEl)
-            }
-        }
-    })
-
-
-}
-
+//carica le caselle di select per selezionare i dati della condivisione
 function caricaUtDoc() {
     fetch("http://localhost:8080/esame_cloud/rest/utenti/" + localStorage.getItem('id'),
             {
@@ -241,6 +249,64 @@ function caricaUtDoc() {
 }
 
 
+//carico i documenti condivisi con l'utente loggato
+function documentiCondivisiConME() {
+    let container = document.getElementById("allCondivisi");
+    let container2 = document.getElementById("allElCond");
+
+
+    fetch("http://localhost:8080/esame_cloud/rest/documenti/docCondivisiConMe/" + localStorage.getItem('id'),
+            {
+                method: "GET"
+            }).then(response => {
+        console.log(response.status)
+        return response.json()
+    }).then(jsonData => {
+        for (var i = 0; i < jsonData.length; i++) {
+            for (var j = 0; j < jsonData[i].condivisioni.length; j++) {
+                let el = document.createElement(`p`)
+                let btnEl = document.createElement("a")
+                let liEl = document.createElement("li")
+                liEl.classList.add("fas")
+                liEl.classList.add("fa-trash")
+
+                liEl.setAttribute("style", "color:grey")
+                btnEl.classList.add("badge-light")
+
+                btnEl.setAttribute("href", "#");
+                btnEl.setAttribute("style", "height:49px")
+                btnEl.setAttribute(`onclick`, `eliminaCondivisione(${jsonData[i].idDocumento},${localStorage.getItem("id")})`)
+                el.classList.add("list-group-item");
+                el.setAttribute("id", "pDocCond");
+
+                el.innerHTML = "<b> Condiviso da </b> - " + jsonData[i].utente.email + " - <b> File - </b>" + jsonData[i].path
+                btnEl.appendChild(liEl)
+                container.appendChild(el)
+                container2.appendChild(btnEl)
+            }
+        }
+    })
+}
+
+      function eliminaCondivisione(idDoc, idUtente){
+         
+        
+          
+          fetch("http://localhost:8080/esame_cloud/rest/documenti/elCondividi/" +idUtente + "/" +  idDoc,
+          {
+              method : "DELETE",
+              headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+              }             
+          }).then(response=>{
+              if(response.status == 200){
+                  alert("condisione eliminata correttamente")
+              }else{
+                  alert("problema nell'eliminazione della condivisione")
+              }
+          })
+           
+        }
 
 
 
